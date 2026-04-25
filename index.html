@@ -31,6 +31,18 @@
 
   <title>DialTrack</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- Safety: unregister any service worker installed by previous builds.
+       The current build does not register one (--pwa-strategy=none), but legacy
+       workers from earlier deploys can still intercept requests and serve stale
+       bundles. This snippet evicts them so users self-heal on their next load. -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(regs) {
+        regs.forEach(function(reg) { reg.unregister(); });
+      });
+    }
+  </script>
 </head>
 <body>
   <!--
